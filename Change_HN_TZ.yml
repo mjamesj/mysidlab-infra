@@ -1,0 +1,35 @@
+---
+
+- name: Create a sandbox instance
+  hosts: all
+  gather_facts: False
+  become: true
+  vars:
+    hostname: MJ_NewHost
+    tz: Antarctica/McMurdo
+    mail: mjamesj@gmail.com
+    
+  tasks:
+    - name: Set timezone to "{{ tz }}"
+      timezone:
+        name: "{{ tz }}"
+    - name: Display new timezone
+      shell: date +%Z
+      
+    - name: Set hostname
+      hostname:
+        name: "{{ hostname }}"
+        
+    - name: Dump host facts
+      setup:
+      
+   - name: Sending an e-mail using Gmail SMTP servers
+     mail:
+       host: smtp.gmail.com
+       port: 587
+       username: mjamesj@gmail.com
+       password: mysecret
+       to: Me <mjamesj3@yahoo.com>
+       subject: Server Config Change
+       body: System {{ hostname }} has been successfully updated.
+     delegate_to: localhost
